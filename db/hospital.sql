@@ -1,0 +1,10 @@
+DROP TABLE hs_ask;
+CREATE TABLE hs_ask (id bigint NOT NULL AUTO_INCREMENT, user_id bigint, openid varchar(100), user_img varchar(100), ask_title varchar(200), ask_content varchar(1000), ask_img varchar(100), gwt_create_time bigint, gwt_mofify_time bigint, ask_voice varchar(100), ask_vedio varchar(100), PRIMARY KEY (id), INDEX hs_ask_ix1 (openid)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE hs_dept;
+CREATE TABLE hs_dept (id bigint NOT NULL AUTO_INCREMENT, dept_id varchar(5), dept_name varchar(20), PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE hs_doc_answer;
+CREATE TABLE hs_doc_answer (id bigint NOT NULL AUTO_INCREMENT, ask_id bigint, answer_content varchar(500), hos_doc_id bigint, ask_user_id bigint, ask_user_name varchar(20), ask_user_img varchar(100), good_num int(10) unsigned, gwt_create_time bigint, answer_voice varchar(100), answer_vedio varchar(100), answer_img varchar(100), gwt_modify_time bigint, PRIMARY KEY (id), CONSTRAINT hs_doc_answer_ix1 UNIQUE (ask_id, hos_doc_id), INDEX hs_doc_answer_ix2 (hos_doc_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE hs_doctor;
+CREATE TABLE hs_doctor (id bigint NOT NULL AUTO_INCREMENT, open_id varchar(50), doc_name varchar(20), doc_email varchar(50), doc_hospital_addr varchar(200), doc_desc varchar(500), sex varchar(2), doc_group varchar(50), doc_hospital_img varchar(200), doc_hospital_name varchar(100), doc_img varchar(200), doc_title varchar(20), good_num int, PRIMARY KEY (id), CONSTRAINT hs_doctor_ix1 UNIQUE (open_id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE hs_user;
+CREATE TABLE hs_user (id bigint NOT NULL AUTO_INCREMENT, openid varchar(100), user_name varchar(20), sex varchar(2), PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
