@@ -5,6 +5,7 @@ import hbec.app.hospital.domain.Ask;
 import hbec.app.hospital.repository.HospitalRepository;
 import hbec.app.hospital.service.IAnswerService;
 import hbec.app.hospital.service.IAskService;
+import hbec.app.hospital.service.impl.PayService;
 import hbec.app.hospital.util.AliYunOSSUtil;
 import hbec.platform.commons.annotations.HbecUriHandler;
 import hbec.platform.commons.annotations.Inject;
@@ -24,6 +25,8 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.Maps;
 
 /**
  * 提问handler
@@ -55,6 +58,10 @@ public class AskHandler {
 	public void ask(IRequest request, IJsonResponse resp){
 		try{
 			ReadOnlyHttpParams params = request.getParams();
+			String[] names = params.getNames();
+			for (String name : names) {
+				logger.info("key:{},value:{}",name,params.getValue(name));
+			}
 			HttpParts parts= request.getParts();
 			byte[] imgByte = parts.get("img");
 			byte[] vedio = parts.get("vedio");
@@ -160,8 +167,14 @@ public class AskHandler {
 			}
 			
 			askService.save(ask);
+			Map<String,Object> result = Maps.newHashMap();
+			result.put("result", 1);
+			result.put("orderNo", System.currentTimeMillis());
+			result.put("payAmt", 30);
 			
-			resp.setData("{\"result\":1}");
+			PayService ps = new PayService();
+			Map<String,String> result2 = ps.getOAuthService("" + System.currentTimeMillis(), 30, "购买一次医疗服务", ask.getOpenId(), request.getIp());
+			resp.setData(result2);
 		}catch(Exception e){
 			logger.error("", e);
 			resp.setData("{\"result\":0}");
