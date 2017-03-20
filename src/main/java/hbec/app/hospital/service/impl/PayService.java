@@ -156,7 +156,7 @@ public class PayService {
 		payment.put("productName", paymentDesc);
 		payment.put("payAmount", "" + payAmount);
 
-		System.out.println(payment);
+		log.info("[pay]payment: {}",payment);
 		// return paySign;
 		return payment;
 	}

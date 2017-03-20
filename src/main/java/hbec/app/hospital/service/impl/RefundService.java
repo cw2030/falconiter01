@@ -58,17 +58,17 @@ public class RefundService {
         data.put(PayOrderField.SIGN.getField(), param.getSign()); // sign放到map中，为后续转xml
         // 转成xml格式
         String xml = XmlUtil.toXml(data);
-        logger.info("post.xml=" + xml);
+        logger.info("[refund]post.xml=" + xml);
         
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("apiclient_cert.p12");
         String resultStr = WeixinUtil.postXmlWithKey(refundUrl, xml, in, mchId);
-        logger.info("result=" + resultStr);
+        logger.info("[refund]result=" + resultStr);
 
      // 校验返回结果 签名
         Map<String, Object> resultMap = XmlUtil.parseXml(resultStr);
         String resultSign = SignUtil.sign(resultMap, apiKey);
         if (resultMap.get("sign") == null || !resultMap.get("sign").equals(resultSign)) {
-            logger.info("sign is not correct, " + resultMap.get("sign") + " " + resultSign);
+            logger.info("[refund]sign is not correct, " + resultMap.get("sign") + " " + resultSign);
             throw new RuntimeException("签名校验不通过");
         }
 

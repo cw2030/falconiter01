@@ -19,7 +19,13 @@ public class TestUUID {
             }
         }
         
+        
         System.out.println(extendName);
+        
+        System.out.println(System.nanoTime());
+        System.out.println(System.nanoTime());
+        System.out.println(System.nanoTime());
+        System.out.println(System.currentTimeMillis());
 	}
 
 }

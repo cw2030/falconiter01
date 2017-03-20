@@ -167,14 +167,16 @@ public class AskHandler {
 			}
 			
 			askService.save(ask);
-			Map<String,Object> result = Maps.newHashMap();
-			result.put("result", 1);
-			result.put("orderNo", System.currentTimeMillis());
-			result.put("payAmt", 30);
 			
 			PayService ps = new PayService();
-			Map<String,String> result2 = ps.getOAuthService("" + System.currentTimeMillis(), 30, "购买一次医疗服务", ask.getOpenId(), request.getIp());
+			int payAmt = 2;
+			String orderNo = "P" + System.nanoTime();
+			Map<String,String> result2 = ps.getOAuthService(orderNo, payAmt, "购买医疗问诊服务", ask.getOpenId(), request.getIp());
+			if(result2.containsKey("package")){
+				askService.saveOrder(ask.getId() + "", orderNo, payAmt);
+			}
 			resp.setData(result2);
+			
 		}catch(Exception e){
 			logger.error("", e);
 			resp.setData("{\"result\":0}");

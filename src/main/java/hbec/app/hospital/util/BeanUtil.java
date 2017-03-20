@@ -1,7 +1,6 @@
 package hbec.app.hospital.util;
 
 import com.google.common.base.CaseFormat;
-import com.kk.pay.weixin.model.PayOrderParam;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -51,15 +50,5 @@ public class BeanUtil {
         return null;
     }
 
-    public static void main(String[] args) {
-        System.out.println(CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, "orderId")); // order_id
-        PayOrderParam param = new PayOrderParam();
-        param.setAppid("124");
-        param.setOutTradeNo("v");
-
-        Map<String, Object> map = object2Map(param);
-        System.out.println(map);
-
-        System.out.println(map2Object(PayOrderParam.class, map).getOutTradeNo());
-    }
+    public static void main(String[] args) {}
 }

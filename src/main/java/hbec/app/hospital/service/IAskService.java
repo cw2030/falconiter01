@@ -19,4 +19,9 @@ public interface IAskService {
 	 * @return
 	 */
 	Ask get(long askId);
+	
+	
+	int saveOrder(String askId, String orderNo, int payAmt);
+	
+	int refund(String askId);
 }

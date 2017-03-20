@@ -1,7 +1,7 @@
 package hbec.app.hospital.domain;
 
+import hbec.app.hospital.service.Validator;
 
-import com.kk.pay.base.service.Validator;
 
 /**
  * payOrderParam 参数 必填信息
