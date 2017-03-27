@@ -13,6 +13,8 @@ import hbec.platform.commons.container.ReadOnlyHttpParams;
 import hbec.platform.commons.utils.Strings;
 
 import java.time.Clock;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,6 +59,9 @@ public class AnswerHandler {
 	private String hospitalLogo;
 		 */
 		ReadOnlyHttpParams params = req.getParams();
+		Arrays.asList(params.getNames()).forEach(key -> {
+			logger.info("[Ask]key:{},value:{}",key,params.getValue(key));
+		});
 		String askId = params.getValue("askId");
 		String docOpenId = params.getValue("openId");
 		String answerContent = params.getValue("answerContent");
@@ -77,7 +82,10 @@ public class AnswerHandler {
 				logger.error("{}上传图片失败",docOpenId);
 			}
 		}else{
-			logger.info("[AnswerHandler]{}没有上传图片",docOpenId);
+			answer.setAnswerImg(params.getValue("answerImgStr"));
+			if(Strings.isEmpty(answer.getAnswerImg())){
+				logger.info("[AnswerHandler]{}没有上传图片",docOpenId);
+			}
 		}
 		if(answerVedio != null && answerVedio.length > 0){
 			String key = UUID.randomUUID().toString().replaceAll("-", "")+".mp4";
@@ -88,7 +96,10 @@ public class AnswerHandler {
 				logger.error("{}上传视频失败",docOpenId);
 			}
 		}else{
-			logger.info("[AnswerHandler]{}没有上传视频",docOpenId);
+			answer.setAnswerVedio(params.getValue("answerVedioStr"));
+			if(Strings.isEmpty(answer.getAnswerVedio())){
+				logger.info("[AnswerHandler]{}没有上传视频",docOpenId);
+			}
 		}
 		if(answerVoice != null && answerVoice.length > 0){
 			String key = UUID.randomUUID().toString().replaceAll("-", "")+".mp3";
@@ -99,7 +110,11 @@ public class AnswerHandler {
 				logger.error("{}上传语音失败",docOpenId);
 			}
 		}else{
-			logger.info("[AnswerHandler]{}没有上传语音",docOpenId);
+			answer.setAnswerVoice(params.getValue("answerVoiceStr"));
+			if(Strings.isEmpty(answer.getAnswerVoice())){
+				logger.info("[AnswerHandler]{}没有上传语音",docOpenId);
+			}
+			
 		}
 		
 		answer.setAskId(Long.parseLong(askId));
@@ -108,9 +123,14 @@ public class AnswerHandler {
 		answer.setGoodNum(0);
 		answer.setGwtCreateTime(Clock.systemUTC().millis());
 		answer.setHospitalLogo((String)docMap.get("doc_hospital_img"));
-		
-		
+		Map<String,String> map = new HashMap<>();
+		if(repository.saveAnswer(answer)){
+			map.put("result", "1");
+		}else{
+			map.put("result", "0");
+		}
 		//MOCK
-		resp.setData(repository.queryAnswerByAskId(req.getParams().getValue("answerId")));
+//		resp.setData(repository.queryAnswerByAskId(req.getParams().getValue("answerId")));
+		resp.setData(map);
 	}
 }

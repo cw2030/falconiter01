@@ -1,0 +1,21 @@
+<configuration scan="true" scanPeriod="15 seconds">
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<root level="DEBUG">
+		<!-- <appender-ref ref="FILE" /> -->
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<!-- <logger name="com.niurr" level="TRACE" /> -->
+	<logger name="PlatformBootstrap" level="DEBUG" />
+	<logger name="PlatformUriHandler" level="DEBUG" />
+	<logger name="PlatformMgtHandler" level="DEBUG" />
+	<logger name="DEBUGGING" level="DEBUG" />
+	<logger name="freemarker" level="INFO" />
+	<logger name="org" level="INFO" />
+</configuration>

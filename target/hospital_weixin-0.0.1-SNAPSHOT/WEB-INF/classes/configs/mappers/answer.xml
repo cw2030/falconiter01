@@ -78,7 +78,7 @@
 		    )
 		    VALUES
 		    (
-		        #{askId},
+		        #{askId}
 		        #{answerContent},
 		        #{docName},
 		        #{docImg},

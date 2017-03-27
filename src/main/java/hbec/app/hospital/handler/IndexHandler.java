@@ -5,14 +5,18 @@ import hbec.app.hospital.repository.HospitalRepository;
 import hbec.platform.commons.annotations.Form;
 import hbec.platform.commons.annotations.HbecUriHandler;
 import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.annotations.RequestMethod;
 import hbec.platform.commons.container.IJsonResponse;
 import hbec.platform.commons.container.IRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IndexHandler {
 
 	@Inject
 	private HospitalRepository indexRepository;
+	
+	private static Logger logger = LoggerFactory.getLogger(IndexHandler.class);
 	
 	@HbecUriHandler(uris={"/"})
 	public void index0(IRequest req, IJsonResponse resp,@Form IndexQuerCondition condition){
@@ -25,6 +29,15 @@ public class IndexHandler {
 		//MOCK
 		resp.setData(indexRepository.index(condition));
 	}
+	
+	@HbecUriHandler(uris="/ask/self")
+	public void querySelfQuestion(IRequest req, IJsonResponse resp,@Form IndexQuerCondition condition){
+		String openId = req.getParams().getValue("openId");
+		logger.info("openId:{},conditon:{}", openId, condition.getOpenId());
+		condition.setOpenId(openId);
+		resp.setData(indexRepository.indexSelf(condition));
+	}
+	
 	
 	@HbecUriHandler(uris="/i/q")
 	public void questionTypeList(IJsonResponse resp){

@@ -1,0 +1,19 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="doctor">
+
+	<select id="selectDocFromFollow" resultType="hashmap">
+		select doc_id from hs_user_follow_doc where openid=#{askId}
+	</select>
+
+	<select id="selectDocFromQuestionTypeName" resultType="hashmap">
+		select id,open_id from hs_doctor where doc_question=#{questionTypeName}
+	</select>
+	
+	<select id="selectDocFromOpenId" resultType="hashmap">
+		select doc_name,doc_img,doc_hospital_img,doc_hospital_name from hs_doctor where open_id=#{openId}
+	</select>
+	
+</mapper>

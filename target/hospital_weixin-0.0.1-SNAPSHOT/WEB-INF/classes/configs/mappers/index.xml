@@ -2,7 +2,7 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="answer">
+<mapper namespace="index">
 	<resultMap type="hbec.app.hospital.domain.AskAndAnswerDomain" id="askAndAnswer">
 		<id column="id" property="questionId"/>
 		<result column="user_name" property="userName"/>
@@ -24,11 +24,28 @@
 		<result column="question_type_name" property="questionTypeName"/>
 		<result column="good_num" property="goodNum"/>
 		<result column="gwt_create_time" property="gwtCreateTime"/>
-		<result column="gwt_create_time" property="gwtCreateTime"/>
 		<result column="gwt_modify_time" property="gwtModifyTime"/>
 	</resultMap>
-
-	<select id="selectByAskId" resultMap="askAndAnswer">
+	
+	<resultMap type="hbec.app.hospital.domain.QuestionType" id="questionType">
+		<id column="id" property="id"/>
+		<result column="q_name" property="qName"/>
+	</resultMap>
+	
+	<resultMap type="hbec.app.hospital.domain.DoctorGroup" id="doctorGroup">
+		<id column="id" property="id"/>
+		<result column="g_name" property="gName"/>
+	</resultMap>
+	
+	<select id="selectQuestionType" resultMap="questionType">
+		select id,q_name from hs_question
+	</select>
+	
+	<select id="selectDoctorGroup" resultMap="doctorGroup">
+		select id,g_name from hs_doc_group
+	</select>
+	
+	<select id="selectForFollowDoc" resultMap="askAndAnswer">
 		SELECT
 		    a.id,
 		    a.user_name,
@@ -54,43 +71,52 @@
 		    a.question_type_name,
 		    a.question_type_id
 		FROM
-		    hs_ask a left join  
+		    hs_ask a ,
 		    hs_doc_answer b
-		on
+		WHERE
+		    a.doc_id in(#{docId}) and 
 		    a.id=b.ask_id
-		where a.id=#{id}
+		    
+		ORDER BY
+		    b.gwt_create_time ,
+		    a.gwt_create_time DESC
 	</select>
-	<insert id="insert">
-	    INSERT
-		INTO
-		    hs_doc_answer
-		    (
-		        ask_id,
-		        answer_content,
-		        doc_name,
-		        doc_img,
-		        good_num,
-		        gwt_create_time,
-		        answer_voice,
-		        answer_vedio,
-		        answer_img,
-		        hospital_logo
-		    )
-		    VALUES
-		    (
-		        #{askId},
-		        #{answerContent},
-		        #{docName},
-		        #{docImg},
-		        #{goodNum},
-		        #{gwtCreateTime},
-		        #{answerVoice},
-		        #{answerVedio},
-		        #{answerImg},
-		        #{hospitalLogo}
-		    )
-
-	</insert>
 	
+	<select id="selectForFollowTop10" resultMap="askAndAnswer">
+		SELECT
+		    a.id,
+		    a.user_name,
+		    a.user_img,
+		    a.ask_title,
+		    a.ask_content,
+		    a.ask_img,
+		    a.ask_img2,
+		    a.ask_img3,
+		    a.ask_vedio,
+		    a.gwt_create_time,
+		    b.id answer_id,
+		    b.answer_content,
+		    answer_voice,
+		    answer_vedio,
+		    answer_img,
+		    b.doc_name,
+		    b.doc_img,
+		    b.good_num ,
+		    b.gwt_create_time answer_create_time,
+		    b.gwt_modify_time answer_modify_time,
+		    b.hospital_logo,
+		    a.question_type_name,
+		    a.question_type_id
+		FROM
+		    hs_ask a ,
+		    hs_doc_answer b
+		WHERE
+		    a.id=b.ask_id
+		    
+		ORDER BY
+		    b.gwt_create_time ,
+		    a.gwt_create_time DESC
+		limit 10
+	</select>
 
 </mapper>

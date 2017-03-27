@@ -1,0 +1,48 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ask">
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id"  parameterType="hbec.app.hospital.domain.Ask">
+		
+		INSERT
+		INTO
+		    hs_ask
+		    (
+		        user_name,
+		        openid,
+		        user_img,
+		        ask_title,
+		        ask_content,
+		        ask_img,
+		        gwt_create_time,
+		        ask_vedio,
+		        doc_id,
+		        question_type_id,
+		        question_type_name,
+		        doc_openid,
+		        ask_img2,
+		        ask_img3
+		    )
+		    VALUES
+		    (
+		        #{userName},
+		        #{openId},
+		        #{userImg},
+		        #{askTitle},
+		        #{askContent},
+		        #{askImg},
+		        #{gwtCreateTime},
+		        #{askVedio},
+		        #{docId},
+		        #{questionTypeId},
+		        #{questionTypeName},
+		        #{docOpenId},
+		        #{askImg2},
+		        #{askImg3}
+		    )
+
+	</insert>
+	
+
+</mapper>

@@ -11,6 +11,7 @@ import hbec.platform.commons.exceptions.DbServiceException;
 import hbec.platform.commons.services.IDbService;
 import hbec.platform.commons.utils.Strings;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,23 +31,60 @@ public class HospitalRepository {
 	
 	public List<AskAndAnswerDomain> index(IndexQuerCondition condition){
 		try{
-			List<Map<String,Object>> docIdList = dbService.list("doctor.selectDocFromFollow", condition.getOpenId());
-			StringBuilder builder = new StringBuilder();
+			List<Map<String,Object>> docIdList = dbService.list("index.selectFollowDocIds", condition.getOpenId());
+			StringBuilder docBuilder = new StringBuilder();
 			docIdList.forEach(value -> {
-				builder.append(value).append(",");
+				docBuilder.append(value.get("doc_id")).append(",");
 			});
+			if(docBuilder.length() > 0){
+				docBuilder.setLength(docBuilder.length() - 1);
+			}
+			
+			List<Map<String,Object>> questionIdList = dbService.list("index.selectFollowDocIds", condition.getOpenId());
+			StringBuilder questionBuilder = new StringBuilder();
+			questionIdList.forEach(value -> {
+				questionBuilder.append(value.get("question_id")).append(",");
+			});
+			if(questionBuilder.length() > 0){
+				questionBuilder.setLength(questionBuilder.length() - 1);
+			}
+			
 			List<AskAndAnswerDomain> indexList = null;
-			if(Strings.isEmpty(builder.toString())){
+			if(Strings.isEmpty(docBuilder.toString()) && Strings.isEmpty(questionBuilder.toString())){
 				//如果没有查询到任何关注，则直接显示最近10条问答
 				logger.debug("[Index] show top 10.");
-				indexList = dbService.list("index.selectForFollowTop10", builder.toString());
+				indexList = dbService.list("index.selectForFollowTop10", docBuilder.toString());
 				
 			}else{
 				logger.debug("[Index] show all for {}.",condition.getOpenId());
-				indexList = dbService.list("index.selectForFollowDoc", builder.toString());
+				Map<String,String> paraMap = new HashMap<String,String>();
+				paraMap.put("docId", docBuilder.toString());
+				paraMap.put("questionTypeId", docBuilder.toString());
+				indexList = dbService.list("index.selectForFollow", paraMap);
 			}
 			
 			return indexList;
+		}catch(DbServiceException de){
+			logger.error(de.getMessage());
+		}catch(Exception e){
+			logger.error("", e);
+		}
+		return Lists.newArrayList();
+	}
+	
+	//
+	public List<AskAndAnswerDomain> indexSelf(IndexQuerCondition condition){
+		try{
+			Map<String,Object> map = dbService.select("index.isDoctor", condition.getOpenId());
+			if(null != map && map.size() > 0){
+				//current user is doctor.
+				return dbService.list("index.selectQutionForDoc", condition.getOpenId());
+			}else{
+				//current user is normal user.
+				return dbService.list("index.selectSelfQuestion", condition.getOpenId());
+			}
+			
+			
 		}catch(DbServiceException de){
 			logger.error(de.getMessage());
 		}catch(Exception e){
@@ -123,4 +161,27 @@ public class HospitalRepository {
 		}
 		return Maps.newHashMap();
 	}
+	
+	public List<Map<String,Object>> selectDoctorsForGroup(String groupTypeName){
+		try{
+			return dbService.list("doctor.doctorsFromGroupTypeName", groupTypeName);
+		}catch(DbServiceException de){
+			logger.error(de.getMessage());
+		}catch(Exception e){
+			logger.error("{}" , e.getMessage());
+		}
+		return Lists.newArrayList();
+	}
+	
+	public List<Map<String,Object>> selectDoctorsForQuestion(String questionTypeName){
+		try{
+			return dbService.list("doctor.doctorsFromQuestionTypeName", questionTypeName);
+		}catch(DbServiceException de){
+			logger.error(de.getMessage());
+		}catch(Exception e){
+			logger.error("{}" , e.getMessage());
+		}
+		return Lists.newArrayList();
+	}
+	
 }
