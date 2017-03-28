@@ -1,0 +1,81 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="agree">
+	<select id="queryComment">
+		SELECT 
+			answer_id answerId, 
+			openid openId,comments comment, 
+			avatar_url avatarUrl, 
+			nick_name nickName 
+		FROM hs_comment 
+		where answer_id=#{answerId}
+		
+	</select>
+	<insert id="saveAgree">
+		
+		INSERT
+		INTO
+		    hs_agreement
+		    (
+		        openid,
+		        doc_openid,
+		        answer_id,
+		    )
+		    VALUES
+		    (
+		        #{openId},
+		        #{docOpenId},
+		        #{answerId}
+		    )
+
+	</insert>
+	
+	<insert id="saveComment">
+		
+		INSERT
+		INTO
+		    hs_comment
+		    (
+		        answer_id,
+		        openid,
+		        comments,
+		        avatar_url,
+		        nick_name
+		    )
+		    VALUES
+		    (
+		        #{answerId},
+		        #{openId},
+		        #{comment},
+		        #{avatarUrl},
+		        #{nickName}
+		    )
+
+	</insert>
+	
+	<update id="addAnserGoodNum">
+		
+		UPDATE
+		    hs_doc_answer
+		SET
+		    good_num = good_num+1
+		
+		WHERE
+		    id = #{answerId};
+
+	</update>
+	<update id="addDoctorGoodNum">
+		
+		UPDATE
+		    hs_doc_answer
+		SET
+		    good_num = good_num+1
+		
+		WHERE
+		    open_id = #{docOpenId};
+
+	</update>
+	
+</mapper>
