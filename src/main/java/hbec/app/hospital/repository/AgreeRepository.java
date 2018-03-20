@@ -1,9 +1,5 @@
 package hbec.app.hospital.repository;
 
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.annotations.Repository;
-import hbec.platform.commons.services.IDbService;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.annotations.Repository;
+import com.xy.platform.commons.services.IDbService;
 
 @Repository
 public class AgreeRepository {
@@ -45,7 +44,8 @@ public class AgreeRepository {
 			param.put("answerId", answerId);
 			param.put("avatarUrl", avatarUrl);
 			param.put("nickName", nickName);
-			return dbService.insert("agree.saveComment", param);
+			dbService.insert("agree.saveComment", param);
+			dbService.update("agree.addcommentNum", answerId);
 		}catch(Exception e){
 			logger.error(e.getMessage()+"\r\n",e);
 		}

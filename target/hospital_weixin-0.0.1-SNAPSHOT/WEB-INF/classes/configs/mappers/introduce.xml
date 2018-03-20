@@ -1,0 +1,71 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="introduce">
+	<resultMap type="hbec.app.hospital.domain.AskAndAnswerDomain" id="introduceMap">
+		<id column="id" property="questionId"/>
+		<result column="user_name" property="userName"/>
+		<result column="ask_title" property="askTitle"/>
+		<result column="ask_content" property="askContent"/>
+		<result column="ask_img" property="askImg"/>
+		<result column="ask_img2" property="askImg2"/>
+		<result column="ask_img3" property="askImg3"/>
+		<result column="gwt_modify_time" property="gwtModifyTime"/>
+	</resultMap>
+
+	<select id="selectDocInfoFromOpenid" resultType="hashmap">
+		select
+		id docId
+		, open_id openId
+		, doc_name docName
+	    , doc_email docEmail , doc_hospital_addr docHospital
+	    , doc_desc docDesc, sex sex, doc_group docGroup
+	    , doc_hospital_img docHospitalImg, doc_hospital_name docHospitalName
+        , doc_img docImg, doc_title docTitle
+        ,doc_question docQuestion, img1_str img1Str
+        , img2_str img2Str, doc_phone docPhone,doc_location docLocation 
+		from hs_doctor
+		WHERE open_id = #{openId}
+	</select>
+	<select id="countIntroduceInfo" resultType="int">
+		select count(id) from hs_introducer where beintroducer_openid=#{beIntroducerOpenId}
+	</select>
+	<insert id="insertIntroduce">
+	    insert into hs_introducer(introducer_openid, beintroducer_openid) 
+	    VALUES(#{introducerOpenId}, #{beIntroducedOpenId})
+
+	</insert>
+	<insert id="insertDoctor">
+	    INSERT INTO hs_doctor(open_id , doc_name 
+	    , doc_email , doc_hospital_addr 
+	    , doc_desc , sex , doc_group 
+	    , doc_hospital_img , doc_hospital_name 
+        , doc_img , doc_title
+        ,doc_question , img1_str 
+        , img2_str , doc_phone , doc_location,good_num,price )
+        VALUES(
+        	#{beIntroducedOpenId}
+        	,#{docName}
+        	,#{docEmail}
+        	,#{docHospitalAddr}
+        	,#{docDesc}
+        	,#{sex}
+        	,#{docGroup}
+        	,#{docHospitalImg}
+        	,#{docHospitalName}
+        	,#{docImg}
+        	,#{docTitle}
+        	,#{docQuestion}
+        	,#{imgStr1}
+        	,#{imgStr2}
+        	,#{docPhone}
+        	,#{docLocation}
+        	,0
+        	,#{price}
+        )
+        
+
+	</insert>
+
+</mapper>

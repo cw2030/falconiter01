@@ -1,5 +1,22 @@
 package hbec.app.hospital.handler;
 
+import java.time.Clock;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.container.HttpParts;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+import com.xy.platform.commons.container.ReadOnlyHttpParams;
+import com.xy.platform.commons.services.IConfigurationService;
+import com.xy.platform.commons.utils.Strings;
+
 import hbec.app.hospital.domain.Answer;
 import hbec.app.hospital.domain.Ask;
 import hbec.app.hospital.repository.HospitalRepository;
@@ -7,26 +24,6 @@ import hbec.app.hospital.service.IAnswerService;
 import hbec.app.hospital.service.IAskService;
 import hbec.app.hospital.service.impl.PayService;
 import hbec.app.hospital.util.AliYunOSSUtil;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.container.HttpParts;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-import hbec.platform.commons.container.ReadOnlyHttpParams;
-import hbec.platform.commons.services.IConfigurationService;
-import hbec.platform.commons.utils.Strings;
-
-import java.time.Clock;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
 
 /**
  * 提问handler
@@ -62,6 +59,7 @@ public class AskHandler {
 			for (String name : names) {
 				logger.info("key:{},value:{}",name,params.getValue(name));
 			}
+			int payAmt = 30;
 			HttpParts parts= request.getParts();
 			byte[] imgByte = parts.get("img");
 			byte[] vedio = parts.get("vedio");
@@ -71,11 +69,23 @@ public class AskHandler {
 			String img2Str = params.getValue("img2Str");
 			String img3Str = params.getValue("img3Str");
 			String vedioStr = params.getValue("vedioStr");
+			String userName = params.getValue("userName");
+			String userImg = params.getValue("userImg");
+			String isArticle = params.getValue("isArtical");
 			
 			Ask ask = new Ask();
 			if(Strings.isNotEmpty(params.getValue("docId"))){
 				ask.setDocId(Long.parseLong(params.getValue("docId")));
 				ask.setDocOpenId(params.getValue("docOpenId"));
+				//查询该医生问题的价格
+				payAmt = repository.getDoctorPrice("" + ask.getDocId());
+				logger.info("[ask]payAmt:{}", payAmt);
+			}
+			if(Strings.isNotEmpty(userName)){
+				ask.setUserName(userName.trim());
+			}
+			if(Strings.isNotEmpty(userImg)){
+				ask.setUserImg(userImg.trim());
 			}
 			ask.setOpenId(params.getValue("userOpenId"));
 			ask.setAskTitle(params.getValue("title"));
@@ -83,7 +93,7 @@ public class AskHandler {
 			ask.setQuestionTypeId(Long.parseLong(params.getValue("questionTypeId")));
 			ask.setQuestionTypeName(params.getValue("questionTypeName"));
 			ask.setGwtCreateTime(Clock.systemUTC().millis());
-			if(ask.getDocId() <= 0){
+			/*if(ask.getDocId() <= 0){
 				//要所问题的类型随机一个该问题的医生
 				List<Map<String,Object>> docList = repository.selectDocFromQuestionTypeName(ask.getQuestionTypeName());
 				if(docList.size() > 0){
@@ -96,7 +106,7 @@ public class AskHandler {
 				}else{
 					logger.warn("[AskCreate]Can't find any doctor.");
 				}
-			}
+			}*/
 			String key = null;
 			if(imgByte != null && imgByte.length > 0){
 				key = UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
@@ -167,9 +177,23 @@ public class AskHandler {
 			}
 			
 			askService.save(ask);
+			/**
+			 * if isArticle is true , auto add record to answer table;
+			 */
+			if(Strings.isNotEmpty(isArticle) || "1".equals(isArticle)){
+				Answer answer = new Answer();
+				answer.setAskId(ask.getId());
+				answer.setAnswerContent("");
+				answer.setDocName("");
+				repository.saveAnswer(answer);
+				Map<String,String> result = new HashMap<String,String>();
+				result.put("result", "1");
+				resp.setData(result);
+				return;
+			}
 			
 			PayService ps = new PayService();
-			int payAmt = 2;
+			
 			String orderNo = "P" + System.nanoTime();
 			Map<String,String> result2 = ps.getOAuthService(orderNo, payAmt, "购买医疗问诊服务", ask.getOpenId(), request.getIp());
 			if(result2.containsKey("package")){

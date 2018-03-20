@@ -1,7 +1,8 @@
 package hbec.app.hospital.service;
 
+import com.xy.platform.commons.annotations.Service;
+
 import hbec.app.hospital.domain.Answer;
-import hbec.platform.commons.annotations.Service;
 
 
 @Service

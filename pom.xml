@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>hbec</groupId>
-		<artifactId>hbec-parent</artifactId>
-		<version>3.0.0-SNAPSHOT</version>
+		<groupId>com.xy.platform</groupId>
+		<artifactId>xyplatform-parent</artifactId>
+		<version>0.0.1</version>
 	</parent>
 
 	<artifactId>hospital_weixin</artifactId>
@@ -13,15 +13,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>hbec</groupId>
-			<artifactId>hbec-platform-runtime-app</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
+			<groupId>com.xy.platform</groupId>
+			<artifactId>xyplatform-runtime-app</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 
 		<dependency>
-			<groupId>hbec</groupId>
-			<artifactId>hbec-platform-common-db</artifactId>
-			<version>3.0.0-SNAPSHOT</version>
+			<groupId>com.xy.platform</groupId>
+			<artifactId>xyplatform-common-db</artifactId>
+			<version>0.0.1</version>
 		</dependency>
 
 		<dependency>

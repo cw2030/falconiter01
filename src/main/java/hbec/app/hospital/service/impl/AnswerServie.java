@@ -1,13 +1,14 @@
 package hbec.app.hospital.service.impl;
 
-import hbec.app.hospital.domain.Answer;
-import hbec.app.hospital.service.IAnswerService;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.exceptions.DbServiceException;
-import hbec.platform.commons.services.IDbService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.exceptions.DbServiceException;
+import com.xy.platform.commons.services.IDbService;
+
+import hbec.app.hospital.domain.Answer;
+import hbec.app.hospital.service.IAnswerService;
 
 public class AnswerServie implements IAnswerService {
 

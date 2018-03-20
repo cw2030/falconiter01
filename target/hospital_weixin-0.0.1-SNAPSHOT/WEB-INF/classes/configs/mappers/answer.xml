@@ -78,7 +78,7 @@
 		    )
 		    VALUES
 		    (
-		        #{askId}
+		        #{askId},
 		        #{answerContent},
 		        #{docName},
 		        #{docImg},
@@ -92,5 +92,8 @@
 
 	</insert>
 	
+	<update id="updateGrab">
+		UPDATE hs_ask SET doc_id =#{docId} , doc_openid = #{docOpenId} WHERE id =#{askId} and doc_openid IS NULL  
+	</update>
 
 </mapper>

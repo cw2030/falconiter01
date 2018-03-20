@@ -1,11 +1,5 @@
 package hbec.app.hospital.handler;
 
-import hbec.app.hospital.util.AliYunOSSUtil;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-import hbec.platform.commons.utils.Strings;
-
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+import com.xy.platform.commons.utils.Strings;
+
+import hbec.app.hospital.util.AliYunOSSUtil;
 
 public class WeixinQrcode {
 

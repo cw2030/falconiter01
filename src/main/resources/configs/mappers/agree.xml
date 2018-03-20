@@ -3,7 +3,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="agree">
-	<select id="queryComment" >
+	<select id="queryComment" resultType="hashmap">
 		SELECT 
 			answer_id answerId, 
 			openid openId,comments comment, 
@@ -21,7 +21,7 @@
 		    (
 		        openid,
 		        doc_openid,
-		        answer_id,
+		        answer_id
 		    )
 		    VALUES
 		    (
@@ -55,6 +55,18 @@
 
 	</insert>
 	
+	<update id="addcommentNum">
+		
+		UPDATE
+		    hs_doc_answer
+		SET
+		    comment_num = comment_num+1
+		
+		WHERE
+		    id = #{answerId}
+
+	</update>
+	
 	<update id="addAnserGoodNum">
 		
 		UPDATE
@@ -63,18 +75,18 @@
 		    good_num = good_num+1
 		
 		WHERE
-		    id = #{answerId};
+		    id = #{answerId}
 
 	</update>
 	<update id="addDoctorGoodNum">
 		
 		UPDATE
-		    hs_doc_answer
+		    hs_doctor
 		SET
 		    good_num = good_num+1
 		
 		WHERE
-		    open_id = #{docOpenId};
+		    open_id = #{docOpenId}
 
 	</update>
 	

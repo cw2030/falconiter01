@@ -1,6 +1,6 @@
 package hbec.app.hospital.db;
 
-import hbec.platform.commons.web.WrappedSession;
+import com.xy.platform.commons.web.WrappedSession;
 
 public class RequestContext implements IRequestContext {
 	public boolean printDbCalls;

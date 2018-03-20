@@ -1,12 +1,5 @@
 package hbec.app.hospital.handler;
 
-import hbec.app.hospital.repository.AgreeRepository;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-import hbec.platform.commons.container.ReadOnlyHttpParams;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+import com.xy.platform.commons.container.ReadOnlyHttpParams;
+
+import hbec.app.hospital.repository.AgreeRepository;
 
 public class AgreeHandler {
 	

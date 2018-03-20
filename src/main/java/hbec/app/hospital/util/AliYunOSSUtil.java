@@ -1,17 +1,15 @@
 package hbec.app.hospital.util;
 
-import hbec.platform.commons.services.IConfigurationService;
-import hbec.platform.commons.utils.Strings;
-import hbec.platform.core.ioc.IOC;
-
 import java.io.ByteArrayInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.dubbo.remoting.exchange.Response;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.PutObjectResult;
+import com.xy.platform.commons.services.IConfigurationService;
+import com.xy.platform.commons.utils.Strings;
+import com.xy.platform.core.ioc.IOC;
 
 public class AliYunOSSUtil {
 	public static String LOCALPATH = "https://weixin.falconiter.com/files/";

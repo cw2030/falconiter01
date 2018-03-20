@@ -1,15 +1,16 @@
 package hbec.app.hospital.handler;
 
-import hbec.app.hospital.domain.IndexQuerCondition;
-import hbec.app.hospital.repository.HospitalRepository;
-import hbec.platform.commons.annotations.Form;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xy.platform.commons.annotations.Form;
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+
+import hbec.app.hospital.domain.IndexQuerCondition;
+import hbec.app.hospital.repository.HospitalRepository;
 
 public class IndexHandler {
 

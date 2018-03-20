@@ -7,7 +7,7 @@
 		
 		INSERT
 		INTO
-		    hs_ask
+		    hs_ask_tmp
 		    (
 		        user_name,
 		        openid,
@@ -44,5 +44,55 @@
 
 	</insert>
 	
+	<insert id="insertRealOrder" >
+		
+		INSERT
+		INTO
+		    hs_ask
+		    (
+		        user_name,
+		        openid,
+		        user_img,
+		        ask_title,
+		        ask_content,
+		        ask_img,
+		        gwt_create_time,
+		        ask_vedio,
+		        doc_id,
+		        question_type_id,
+		        question_type_name,
+		        doc_openid,
+		        ask_img2,
+		        ask_img3
+		    )
+		 select 
+		    user_name,
+		        openid,
+		        user_img,
+		        ask_title,
+		        ask_content,
+		        ask_img,
+		        gwt_create_time,
+		        ask_vedio,
+		        doc_id,
+		        question_type_id,
+		        question_type_name,
+		        doc_openid,
+		        ask_img2,
+		        ask_img3
+		   from hs_ask_tmp where id=#{askId}
+			
+	</insert>
+	
+	<select id="getAskId" resultType="int">
+		select ask_id from hs_order WHERE order_no =#{out_trade_no}
+	</select>
+	
+	<select id="selectDocOpenId" resultType="String">
+		select doc_openid from hs_ask where id=#{askId}
+	</select>
 
+	<update id="updateGrab">
+		UPDATE hs_ask SET doc_id =#{docId} , doc_openid = #{docOpenId} WHERE id =#{askId} and doc_openid IS NULL  
+	</update>
 </mapper>

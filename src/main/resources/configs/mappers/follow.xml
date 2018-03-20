@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="follow">
+	
+	<insert id="followQuestion">
+	    INSERT
+		INTO
+		    hs_user_follow
+		    (
+		        question_id,
+		        question_name,
+		        openid
+		    )
+		    VALUES
+		    (
+		        #{questionId},
+		        #{questionName},
+		        #{openId}
+		    )
+
+	</insert>
+	<delete id="unfollowQuestion">
+	    DELETE FROM hs_user_follow WHERE question_name = #{questionName} and openid = #{openId}
+	</delete>
+	
+	<delete id="unfollowDoctor">
+	    DELETE FROM hs_user_follow_doc WHERE doc_openid = #{docOpenId} and openid = #{openId}
+	</delete>
+	
+	<insert id="followDoctor">
+	    INSERT
+		INTO
+		    hs_user_follow_doc
+		    (
+		        doc_openid,
+		        openid
+		    )
+		    VALUES
+		    (
+		        #{docOpenId},
+		        #{openId}
+		    )
+
+	</insert>
+	<update id="addFollowNum">
+		UPDATE `hs_doctor` set `follow_num` = `follow_num` + 1 where `open_id` = #{docOpenId}
+	</update>
+	
+	<update id="subtractFollowNum">
+		UPDATE `hs_doctor` set `follow_num` = `follow_num` - 1 where `open_id` = #{docOpenId}
+	</update>
+	
+	<select id="getAllFollowDoctors" resultType="hashmap">
+		select doc_openid docOpenId from hs_user_follow_doc where openid=#{openId}
+	</select>
+	
+</mapper>

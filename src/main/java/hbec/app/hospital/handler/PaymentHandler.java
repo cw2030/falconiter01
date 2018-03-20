@@ -1,19 +1,20 @@
 package hbec.app.hospital.handler;
 
-import hbec.app.hospital.service.IAskService;
-import hbec.app.hospital.service.impl.PayService;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-import hbec.platform.commons.container.ReadOnlyHttpParams;
-import hbec.platform.commons.utils.Strings;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+import com.xy.platform.commons.container.ReadOnlyHttpParams;
+import com.xy.platform.commons.utils.Strings;
+
+import hbec.app.hospital.service.IAskService;
+import hbec.app.hospital.service.impl.PayService;
 
 public class PaymentHandler {
 	private static Logger logger = LoggerFactory.getLogger(PaymentHandler.class);
@@ -33,7 +34,18 @@ public class PaymentHandler {
 		for (String string : names) {
 			System.out.println("payback: key:" + string + "--- value: " + params.getValue(string));
 		}
-		resp.setData("ok");
+		String out_trade_no = params.getValue("out_trade_no");
+		if(Strings.isEmpty(out_trade_no)){
+			//处理微信回调
+			resp.setData("SUCCESS");
+			return;
+		}
+		int result = askService.saveRealOrder(out_trade_no);
+		if(result > 0){
+			resp.setData("1");
+		}else{
+			resp.setData("0");
+		}
 	}
 	
 	@HbecUriHandler(uris="/pay/refund")

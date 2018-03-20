@@ -1,13 +1,5 @@
 package hbec.app.hospital.service.impl;
 
-import hbec.app.hospital.domain.Ask;
-import hbec.app.hospital.domain.PayRefundResult;
-import hbec.app.hospital.service.IAskService;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.exceptions.DbServiceException;
-import hbec.platform.commons.services.IDbService;
-import hbec.platform.commons.utils.Strings;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.exceptions.DbServiceException;
+import com.xy.platform.commons.services.IDbService;
+import com.xy.platform.commons.utils.Strings;
+
+import hbec.app.hospital.domain.Ask;
+import hbec.app.hospital.domain.PayRefundResult;
+import hbec.app.hospital.service.IAskService;
 
 
 public class AskService implements IAskService {
@@ -87,6 +88,19 @@ public class AskService implements IAskService {
 			}
 		}catch(DbServiceException e){
 			logger.error("", e.getMessage());
+		}catch(Exception e){
+			logger.error("", e);
+		}
+		return 0;
+	}
+
+	@Override
+	public int saveRealOrder(String out_trade_no) {
+		try{
+			int askId = dbService.select("ask.getAskId", out_trade_no);
+			Map<String,Object> param = Maps.newHashMap();
+			param.put("askId",askId);
+			return dbService.insert("ask.insertRealOrder", param);
 		}catch(Exception e){
 			logger.error("", e);
 		}

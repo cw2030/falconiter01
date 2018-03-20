@@ -11,6 +11,7 @@ public class AskAndAnswerDomain implements Serializable{
 	
 	private long questionId;
 	private String userName;
+	private String userImg;
 	private String askTitle;
 	private String askContent;
 	private String askImg;
@@ -33,6 +34,7 @@ public class AskAndAnswerDomain implements Serializable{
 	
 	private String openId;
 	private String docOpenId;
+	private int commentNum;
 	
 	public long getQuestionId() {
 		return questionId;
@@ -172,6 +174,18 @@ public class AskAndAnswerDomain implements Serializable{
     public void setAskImg3(String askImg3) {
         this.askImg3 = askImg3;
     }
+	public int getCommentNum() {
+		return commentNum;
+	}
+	public String getUserImg() {
+		return userImg;
+	}
+	public void setUserImg(String userImg) {
+		this.userImg = userImg;
+	}
+	public void setCommentNum(int commentNum) {
+		this.commentNum = commentNum;
+	}
 	
 	
 	

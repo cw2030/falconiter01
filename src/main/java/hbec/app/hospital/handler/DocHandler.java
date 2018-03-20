@@ -1,12 +1,5 @@
 package hbec.app.hospital.handler;
 
-import hbec.app.hospital.repository.HospitalRepository;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-import hbec.platform.commons.container.ReadOnlyHttpParams;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +8,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+import com.xy.platform.commons.container.ReadOnlyHttpParams;
+
+import hbec.app.hospital.repository.HospitalRepository;
 
 public class DocHandler {
 	
@@ -56,13 +56,21 @@ public class DocHandler {
 		});
 		String questionTypeName = req.getParams().getValue("questionTypeName");
 		String groupTypeName = req.getParams().getValue("groupTypeName");
+		String openId = req.getParams().getValue("openId");
+		if(Strings.isNullOrEmpty(openId)){
+			Map<String,String> result = new HashMap<>();
+			result.put("result", "-1");
+			resp.setData(result);
+			logger.error("[DoctorList]openId is null.");
+			return;
+		}
 		if(!Strings.isNullOrEmpty(questionTypeName)){
 			logger.info("[GetDocsForQuestionTypeName]{}", questionTypeName);
-			resp.setData(repository.selectDoctorsForQuestion(questionTypeName));
+			resp.setData(repository.selectDoctorsForQuestion(questionTypeName,openId));
 		}else{
 			if(!Strings.isNullOrEmpty(groupTypeName)){
 				logger.info("[GetDocsForGroupName]{}", groupTypeName);
-				resp.setData(repository.selectDoctorsForGroup(groupTypeName));
+				resp.setData(repository.selectDoctorsForGroup(groupTypeName,openId));
 			}else{
 				Map<String,String> result = new HashMap<>();
 				result.put("result", "0");

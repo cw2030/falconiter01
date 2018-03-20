@@ -1,17 +1,5 @@
 package hbec.app.hospital.handler;
 
-import hbec.app.hospital.domain.Answer;
-import hbec.app.hospital.repository.HospitalRepository;
-import hbec.app.hospital.util.AliYunOSSUtil;
-import hbec.platform.commons.annotations.HbecUriHandler;
-import hbec.platform.commons.annotations.Inject;
-import hbec.platform.commons.annotations.RequestMethod;
-import hbec.platform.commons.container.HttpParts;
-import hbec.platform.commons.container.IJsonResponse;
-import hbec.platform.commons.container.IRequest;
-import hbec.platform.commons.container.ReadOnlyHttpParams;
-import hbec.platform.commons.utils.Strings;
-
 import java.time.Clock;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,6 +8,19 @@ import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.xy.platform.commons.annotations.HbecUriHandler;
+import com.xy.platform.commons.annotations.Inject;
+import com.xy.platform.commons.annotations.RequestMethod;
+import com.xy.platform.commons.container.HttpParts;
+import com.xy.platform.commons.container.IJsonResponse;
+import com.xy.platform.commons.container.IRequest;
+import com.xy.platform.commons.container.ReadOnlyHttpParams;
+import com.xy.platform.commons.utils.Strings;
+
+import hbec.app.hospital.domain.Answer;
+import hbec.app.hospital.repository.HospitalRepository;
+import hbec.app.hospital.util.AliYunOSSUtil;
 
 public class AnswerHandler {
 	
@@ -45,19 +46,7 @@ public class AnswerHandler {
 	 */
 	@HbecUriHandler(uris={"/answer"}, method=RequestMethod.POST)
 	public void answer(IRequest req, IJsonResponse resp){
-		/**
-		 * private long askId;
-	private String answerContent;
-	private String docName;
-	private String docImg;
-	private int goodNum;
-	private long gwtCreateTime;
-	private String answerVoice;
-	private String answerVedio;
-	private String answerImg;
-	private long gwtModifyTime;
-	private String hospitalLogo;
-		 */
+		Map<String,String> map = new HashMap<>();
 		ReadOnlyHttpParams params = req.getParams();
 		Arrays.asList(params.getNames()).forEach(key -> {
 			logger.info("[Ask]key:{},value:{}",key,params.getValue(key));
@@ -65,6 +54,13 @@ public class AnswerHandler {
 		String askId = params.getValue("askId");
 		String docOpenId = params.getValue("openId");
 		String answerContent = params.getValue("answerContent");
+		//更新问题的医生归属，如果更新成功，则继续回答本问题，否则回答失败
+		int updateResult = repository.updateAskForGrabQuestion(askId, docOpenId);
+		if(updateResult == 0){
+			map.put("result", "-2");
+			resp.setData(map);
+		}
+		
 		HttpParts parts = req.getParts();
 		byte[] answerImg = parts.get("answerImg");
 		byte[] answerVoice = parts.get("answerVoice");
@@ -123,7 +119,7 @@ public class AnswerHandler {
 		answer.setGoodNum(0);
 		answer.setGwtCreateTime(Clock.systemUTC().millis());
 		answer.setHospitalLogo((String)docMap.get("doc_hospital_img"));
-		Map<String,String> map = new HashMap<>();
+		
 		if(repository.saveAnswer(answer)){
 			map.put("result", "1");
 		}else{

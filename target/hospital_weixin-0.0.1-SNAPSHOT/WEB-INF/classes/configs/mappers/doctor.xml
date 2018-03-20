@@ -13,7 +13,61 @@
 	</select>
 	
 	<select id="selectDocFromOpenId" resultType="hashmap">
-		select doc_name,doc_img,doc_hospital_img,doc_hospital_name from hs_doctor where open_id=#{openId}
+		select id,open_id,doc_name,doc_img,doc_hospital_img,doc_hospital_name,doc_group,doc_question from hs_doctor where open_id=#{openId}
 	</select>
 	
+	<select id="doctorsFromQuestionTypeName" resultType="hashmap">
+		SELECT
+		    id docId,
+		    open_id docOpenId,
+		    doc_name docName,
+		    doc_email docEmail,
+		    doc_hospital_addr docHospitalAddr,
+		    doc_desc docDesc,
+		    doc_hospital_img docHospitalImg,
+		    doc_hospital_name doc_hospitalName,
+		    doc_img docImg,
+		    doc_title docTitle,
+		    good_num goodNum,
+		    doc_question docQuestion,
+		    doc_group docGroup,
+		    img1_str imgStr1,
+		    img2_str imgStr2,
+		    doc_phone docPhone,
+		    doc_location docLocation,
+		    price price,
+		    follow_num followNum
+		FROM  hs_doctor 
+		where doc_question like "%"#{questionTypeName}"%" 
+		limit 10
+	</select>
+	<select id="doctorsFromGroupTypeName" resultType="hashmap">
+		SELECT
+		    id docId,
+		    open_id docOpenId,
+		    doc_name docName,
+		    doc_email docEmail,
+		    doc_hospital_addr docHospitalAddr,
+		    doc_desc docDesc,
+		    doc_hospital_img docHospitalImg,
+		    doc_hospital_name doc_hospitalName,
+		    doc_img docImg,
+		    doc_title docTitle,
+		    good_num goodNum,
+		    doc_question docQuestion,
+		    doc_group docGroup,
+		    img1_str imgStr1,
+		    img2_str imgStr2,
+		    doc_phone docPhone,
+		    doc_location docLocation,
+		    price price,
+		    follow_num followNum
+		FROM  hs_doctor 
+		where doc_group like "%"#{groupTypeName}"%"
+		limit 10
+	</select>
+	
+	<select id="getDoctorPrice" resultType="int">
+		select price from hs_doctor where id=#{docId}
+	</select>
 </mapper>

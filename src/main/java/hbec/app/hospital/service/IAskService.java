@@ -1,7 +1,8 @@
 package hbec.app.hospital.service;
 
+import com.xy.platform.commons.annotations.Service;
+
 import hbec.app.hospital.domain.Ask;
-import hbec.platform.commons.annotations.Service;
 
 @Service
 public interface IAskService {
@@ -24,4 +25,6 @@ public interface IAskService {
 	int saveOrder(String askId, String orderNo, int payAmt);
 	
 	int refund(String askId);
+	
+	int saveRealOrder(String out_trade_no);
 }
